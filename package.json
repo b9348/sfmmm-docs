@@ -1,0 +1,14 @@
+{
+  "name": "sfmmm-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SFMMM 官方介绍站点 - 创意工坊 Mod 管理器文档",
+  "scripts": {
+    "dev": "vitepress dev docs",
+    "build": "vitepress build docs && node scripts/gen-sitemap.mjs",
+    "preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4"
+  }
+}
