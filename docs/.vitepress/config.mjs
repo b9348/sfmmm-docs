@@ -7,7 +7,17 @@ import { defineConfig } from 'vitepress'
  * - 正式域名经环境变量 SITE_URL 注入(Cloudflare Pages 构建时设置);
  *   canonical / og:url / sitemap 均基于它生成。
  */
-const SITE_URL = (process.env.SITE_URL || 'https://sfmmm.example.com').replace(/\/+$/, '')
+/**
+ * 归一化站点地址:允许 SITE_URL 省略协议(如 "sfm.srewlv.com"),
+ * 统一补全为 https:// 形式,避免 sitemap/canonical 生成协议缺失的无效网址。
+ */
+function normalizeSiteUrl(raw) {
+  let u = (raw || '').trim().replace(/\/+$/, '')
+  if (!u) u = 'sfmmm.example.com'
+  if (!/^https?:\/\//i.test(u)) u = `https://${u}`
+  return u
+}
+const SITE_URL = normalizeSiteUrl(process.env.SITE_URL)
 
 const DESC_ZH =
   'SFMMM 是塞雷卡(Secret Flasher Manaka)的创意工坊 Mod 管理器。塞雷卡2 是当前社区主要游玩的全面改进版。一站式支持模组浏览、订阅下载、评分评论、社区讨论与 BepInEx 前置一键安装,v1/v2 自定义任务生态全覆盖。'

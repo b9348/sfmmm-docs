@@ -13,7 +13,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 const ROOT = join(__dirname, '..')
 const SRC = join(ROOT, 'docs')
 const OUT = join(ROOT, 'docs', '.vitepress', 'dist')
-const SITE_URL = (process.env.SITE_URL || 'https://sfmmm.example.com').replace(/\/+$/, '')
+/** 归一化站点地址:允许 SITE_URL 省略协议,统一补全为 https:// */
+function normalizeSiteUrl(raw) {
+  let u = (raw || '').trim().replace(/\/+$/, '')
+  if (!u) u = 'sfmmm.example.com'
+  if (!/^https?:\/\//i.test(u)) u = `https://${u}`
+  return u
+}
+const SITE_URL = normalizeSiteUrl(process.env.SITE_URL)
 
 const LANG_META = [
   { code: 'zh-CN', dir: '' },
