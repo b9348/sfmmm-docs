@@ -39,18 +39,25 @@ if (!key) {
   process.exit(1)
 }
 
-// 2) 从 sitemap.xml 提取全部 URL(loc 与 hreflang alternates 的 href,去重)
+// 2) 从 sitemap.xml 提取全部 URL,仅保留本站 https://<host> 链接,
+//    排除 XML 命名空间等外部 URL
+const host = new URL(SITE_URL).host
 const sitemap = readFileSync(join(DIST, 'sitemap.xml'), 'utf8')
 const urlSet = new Set()
-for (const m of sitemap.matchAll(/https?:\/\/[^<\s"]+/g)) urlSet.add(m[0])
-
+for (const m of sitemap.matchAll(/https:\/\/[^<\s"]+/g)) {
+  const u = m[0]
+  try {
+    if (new URL(u).host === host) urlSet.add(u)
+  } catch {
+    /* ignore malformed */
+  }
+}
 const urlList = [...urlSet].sort()
 if (!urlList.length) {
-  console.error('[indexnow] sitemap 为空,请先执行 pnpm build。')
+  console.error('[indexnow] sitemap 中未找到本站 URL,请先执行 pnpm build。')
   process.exit(1)
 }
 
-const host = new URL(SITE_URL).host
 const keyLocation = `${SITE_URL}/${key}.txt`
 const payload = { host, key, keyLocation, urlList }
 
