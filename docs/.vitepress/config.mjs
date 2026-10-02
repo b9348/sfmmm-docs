@@ -267,6 +267,7 @@ function seoHeadFor({ page, title, description }) {
   const ogDesc = String(description || '').slice(0, 200)
 
   const head = [
+    ['meta', { name: 'google-adsense-account', content: 'ca-pub-9617969692940509' }],
     ['link', { rel: 'canonical', href: fullUrl }],
     ['meta', { property: 'og:type', content: url === '/' ? 'website' : 'article' }],
     ['meta', { property: 'og:url', content: fullUrl }],
