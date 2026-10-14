@@ -268,6 +268,15 @@ function seoHeadFor({ page, title, description }) {
 
   const head = [
     ['meta', { name: 'google-adsense-account', content: 'ca-pub-9617969692940509' }],
+    // 搜索引擎站点验证(Google Search Console / Bing Webmaster)
+    ['meta', { name: 'google-site-verification', content: 'aKKnTwH1WGypsT4DbyVqKTY4Qt2Fi0NiOTikk8Us8w4' }],
+    ['meta', { name: 'msvalidate.01', content: 'E95E84F34FA795B9B766086AFA806E13' }],
+    // 百度统计(全站注入)
+    [
+      'script',
+      {},
+      `var _hmt=_hmt||[];(function(){var hm=document.createElement("script");hm.src="https://hm.baidu.com/hm.js?abe4752620a534e9594e838191b9ca4a";var s=document.getElementsByTagName("script")[0];s.parentNode.insertBefore(hm,s);})();`,
+    ],
     ['link', { rel: 'canonical', href: fullUrl }],
     ['meta', { property: 'og:type', content: url === '/' ? 'website' : 'article' }],
     ['meta', { property: 'og:url', content: fullUrl }],
