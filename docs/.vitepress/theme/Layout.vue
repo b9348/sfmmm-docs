@@ -33,6 +33,9 @@ function writeMemory(lang) {
 }
 
 function maybeAutoRedirect() {
+  // 搜索引擎爬虫(Googlebot 等)不跳转:避免根路径被判定为“重定向页”而拒收
+  const ua = navigator.userAgent || ''
+  if (/bot|crawl|spider|slurp|bingpreview|lighthouse|headlesschrome/i.test(ua)) return
   const path = window.location.pathname
   const rootPath = path === '/' || path === '' || path.replace(/\/+$/, '') === ''
   if (!rootPath) return

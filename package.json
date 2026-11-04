@@ -7,9 +7,12 @@
     "dev": "vitepress dev docs",
     "build": "vitepress build docs && node scripts/gen-sitemap.mjs",
     "preview": "vitepress preview docs",
+    "release": "cross-env SITE_URL=https://sfmmm-docs.pages.dev pnpm build && wrangler pages deploy docs/.vitepress/dist --project-name=sfmmm-docs --branch=main --commit-dirty=true",
     "indexnow": "node scripts/indexnow.mjs"
   },
   "devDependencies": {
-    "vitepress": "^1.6.4"
+    "cross-env": "^10.1.0",
+    "vitepress": "^1.6.4",
+    "wrangler": "^4.154.0"
   }
 }
