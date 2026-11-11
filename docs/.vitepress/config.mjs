@@ -18,6 +18,10 @@ function normalizeSiteUrl(raw) {
   return u
 }
 const SITE_URL = normalizeSiteUrl(process.env.SITE_URL)
+// 生产构建时 SITE_URL 缺失会产出占位域 canonical/sitemap,直接报错优于静默出错链
+if (process.env.NODE_ENV === 'production' && !process.env.SITE_URL?.trim()) {
+  throw new Error('[config] 缺少环境变量 SITE_URL,请设置生产域名后重新构建')
+}
 
 const DESC_ZH =
   'SFMMM 是塞雷卡(Secret Flasher Manaka)的创意工坊 Mod 管理器。塞雷卡2 是当前社区主要游玩的全面改进版。一站式支持模组浏览、订阅下载、评分评论、社区讨论与 BepInEx 前置一键安装,v1/v2 自定义任务生态全覆盖。'
@@ -265,6 +269,8 @@ function seoHeadFor({ page, title, description }) {
   const url = pageToUrl(page)
   const fullUrl = `${SITE_URL}${url}`
   const ogDesc = String(description || '').slice(0, 200)
+  // 社交分享占位图(iph.href.lu 占位图服务,1200x630)
+  const ogImage = `https://iph.href.lu/1200x630?text=${encodeURIComponent('SFMMM')}`
 
   const head = [
     ['meta', { name: 'google-adsense-account', content: 'ca-pub-9617969692940509' }],
@@ -282,6 +288,9 @@ function seoHeadFor({ page, title, description }) {
     ['meta', { property: 'og:url', content: fullUrl }],
     ['meta', { property: 'og:title', content: title }],
     ['meta', { property: 'og:description', content: ogDesc }],
+    ['meta', { property: 'og:image', content: ogImage }],
+    ['meta', { name: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { name: 'twitter:image', content: ogImage }],
     ['meta', { property: 'og:locale', content: OG_LOCALE[lang] }],
   ]
 
@@ -296,8 +305,8 @@ function seoHeadFor({ page, title, description }) {
     }
     head.push(['link', { rel: 'alternate', hreflang, href: `${SITE_URL}${pageToUrl(pageInLocale(page, locKey))}` }])
   }
-  // x-default 指向中文首页(SEO 主体语言)
-  head.push(['link', { rel: 'alternate', hreflang: 'x-default', href: `${SITE_URL}/` }])
+  // x-default 指向该页的默认语言版本(中文)
+  head.push(['link', { rel: 'alternate', hreflang: 'x-default', href: `${SITE_URL}${pageToUrl(pageInLocale(page, 'zh'))}` }])
   return head
 }
 

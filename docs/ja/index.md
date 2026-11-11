@@ -1,5 +1,6 @@
 ---
 layout: home
+description: SFMMM は SecretFlasher Manaka 向けのワークショップ Mod マネージャーです。Mod の閲覧・購読・評価・コメント、ディスカッション、BepInEx 前提環境のワンクリック導入、v1/v2 カスタム任務エコシステムに対応。
 
 hero:
   name: SFMMM

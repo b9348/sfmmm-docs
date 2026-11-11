@@ -1,5 +1,6 @@
 ---
 layout: home
+description: SFMMM 是塞雷卡(Secret Flasher Manaka)的创意工坊 Mod 管理器。塞雷卡2 是当前社区主要游玩的全面改进版。一站式支持模组浏览、订阅下载、评分评论、社区讨论与 BepInEx 前置一键安装,v1/v2 自定义任务生态全覆盖。
 
 hero:
   name: SFMMM

@@ -20,6 +20,11 @@ function normalizeSiteUrl(raw) {
   if (!/^https?:\/\//i.test(u)) u = `https://${u}`
   return u
 }
+// 本脚本仅在 build 链中执行,域名缺失时直接报错而非静默产出占位域
+if (!process.env.SITE_URL?.trim()) {
+  console.error('[gen-sitemap] 缺少环境变量 SITE_URL,请设置生产域名后重新构建')
+  process.exit(1)
+}
 const SITE_URL = normalizeSiteUrl(process.env.SITE_URL)
 
 const LANG_META = [
@@ -57,15 +62,10 @@ function existsIn(dir, rel) {
   return existsSync(join(SRC, dir, rel))
 }
 
-// 收集并去重「核心页」集合(任何一个语言存在的 md 都算一组)
+// 收集并去重「核心页」集合:仅保留 root(中文)存在的页面,
+// en/ja 有而 root 没有的孤页直接剔除,保持三语分组完整
 const all = collectMd(SRC)
-const cores = [...new Set(all.map(coreOf))].sort()
-cores.forEach((core) => {
-  if (!existsIn('', core)) {
-    // en/ja 有、root 没有的孤页直接剔除,保持三语分组完整
-    cores.splice(cores.indexOf(core), 1)
-  }
-})
+const cores = [...new Set(all.map(coreOf))].sort().filter((core) => existsIn('', core))
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
@@ -80,7 +80,8 @@ for (const core of cores) {
   for (const { code, href } of locs) {
     xml += `    <xhtml:link rel="alternate" hreflang="${code}" href="${esc(href)}" />\n`
   }
-  xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(`${SITE_URL}/`)}" />\n`
+  const xDefault = urlOf('', core)
+  xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${esc(`${SITE_URL}${xDefault}`)}" />\n`
   xml += '  </url>\n'
 }
 xml += '</urlset>\n'

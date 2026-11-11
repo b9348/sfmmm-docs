@@ -1,5 +1,6 @@
 ---
 layout: home
+description: "SFMMM is a Workshop mod manager for Secret Flasher Manaka. Browse, subscribe, rate and discuss mods, install BepInEx prerequisites in one click, and manage the v1/v2 custom-mission ecosystem."
 
 hero:
   name: SFMMM
